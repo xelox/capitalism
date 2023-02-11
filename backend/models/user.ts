@@ -1,6 +1,6 @@
 import { generateUsername } from "../util/generateUsername";
-import WebSocket from 'ws';
 import { GameRoom } from "./gameRoom";
+import WebSocket from 'ws';
 
 export type sokMsg = {
     req: string,
@@ -10,6 +10,7 @@ export type sokMsg = {
 export type user_serial = {
     uid: string,
     name: string,
+    gameId: string,
 }
 
 export class User{
@@ -23,7 +24,9 @@ export class User{
 
     public serialize = (): user_serial => {
         return {
-            uid: this.uid, name: this.name,
+            uid: this.uid, 
+            name: this.name,
+            gameId: String(this.currentGame?.getId()),
         }
     }
     public getUid = () => { return this.uid; }
@@ -39,6 +42,12 @@ export class User{
     }
     public setCurrentGame = (game: GameRoom) => {
         this.currentGame = game;
+    }
+
+    public onSokMsg = (e: WebSocket.MessageEvent) => {
+        if(!this.sok) this.setupSoket(e.target);
+        const req = JSON.parse(e.data.toString());
+        console.log(req);
     }
 
     public sendSokMsg = (msg: sokMsg) => {

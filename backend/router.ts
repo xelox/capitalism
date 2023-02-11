@@ -23,8 +23,6 @@ router. use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit
 router. use(CookieParser());
 
 router. use(userController.loginCheck);
-router.get('/app', (req, res) => res.sendFile(path.join(__dirname, "..", "..", "frontend", "dist", "index.html")))
-router.get('/app/*', (req, res) => res.sendFile(path.join(__dirname, "..", "..", "frontend", "dist", "index.html")))
 router.get('/game', gameController.createGameRoom);
 router.get('/game/:uuid', gameController.serveGame);
 

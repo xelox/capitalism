@@ -4,10 +4,10 @@ import serverConfig from '../lib/serverConfig';
 import path from 'path';
 import fs from 'fs';
 import expressWs from 'express-ws';
+// import WebSocket from 'ws'
 
 import router from './router';
 import { uSession } from './controller/userController';
-import gameController from './controller/gameController';
 
 
 
@@ -25,7 +25,8 @@ wsController.ws('/sok', (ws, req) => {
     const user = sess.user;
     if(!user) return console.log('ERROR: no user');
     // console.log(ws);
-    user.setupSoket(ws);
+    // user.setupSoket(ws);
+    ws.onmessage = user.onSokMsg;
 })
 
 server.listen(PORT, ()=>{

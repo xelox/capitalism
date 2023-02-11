@@ -38,4 +38,6 @@ export class GameRoom{
             players
         }
     }
+
+    public getId = () => this.uuid;
 }
