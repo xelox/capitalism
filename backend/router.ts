@@ -17,7 +17,7 @@ router. get('/client',  (req, res) => res.redirect('dialler'));
 router. get('/', (req, res) => res.redirect('dialler'));
 
 router. use(sessions({secret: cookieSecret, saveUninitialized:true, cookie: { maxAge: ONE_DAY }, resave: false,}));
-router. use(Express.static(path.join(__dirname, "..", "..", "frontend", "dist")));
+router. use(Express.static(path.join(__dirname, "..", "..", "frontend/public")));
 router. use(bodyParser.json({limit: '50mb'}));
 router. use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 router. use(CookieParser());

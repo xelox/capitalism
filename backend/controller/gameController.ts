@@ -29,7 +29,7 @@ class GameController{
             game: uuid,
             user: user,
         }
-        return res.sendFile(path.join(__dirname, "..", "..", "..", "frontend", "dist", "index.html"));
+        return res.sendFile(path.join(__dirname, "..", "..", "..", "frontend", "public", "index.html"));
     }
 }
 
