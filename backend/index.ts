@@ -7,7 +7,7 @@ import expressWs from 'express-ws';
 // import WebSocket from 'ws'
 
 import router from './router';
-import { uSession } from './controller/userController';
+import userController, { uSession } from './controller/userController';
 
 
 
@@ -22,11 +22,9 @@ const wsController = expressWs(serverController, server).app;
 
 wsController.ws('/sok', (ws, req) => {
     const sess: uSession = req.session;
-    const user = sess.user;
+    const user = userController.getUser(String(sess.uid));
     if(!user) return console.log('ERROR: no user');
-    // console.log(ws);
-    // user.setupSoket(ws);
-    ws.onmessage = user.onSokMsg;
+    user.setupSoket(ws);
 })
 
 server.listen(PORT, ()=>{

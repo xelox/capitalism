@@ -23,12 +23,6 @@ class GameController{
         if(!user || !game) return res.redirect('/game');
         const errorAddingUser = game.addUser(user);
         if(errorAddingUser) return res.send(errorAddingUser);
-        // console.log(game.serialize());
-        console.log(user.serialize());
-        const testGeneration = {
-            game: uuid,
-            user: user,
-        }
         return res.sendFile(path.join(__dirname, "..", "..", "..", "frontend", "public", "index.html"));
     }
 }

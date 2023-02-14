@@ -1,4 +1,4 @@
-import { generateUsername } from "../util/generateUsername";
+import { generateUsernameAndPfp } from "../util/generateUsername";
 import { GameRoom } from "./gameRoom";
 import WebSocket from 'ws';
 
@@ -8,6 +8,7 @@ export type sokMsg = {
 }
 
 export type user_serial = {
+    pfpPath: string;
     uid: string,
     name: string,
     gameId: string,
@@ -15,11 +16,15 @@ export type user_serial = {
 
 export class User{
     private uid: string;
-    private name: string = generateUsername();
+    private name: string;
     private sok: WebSocket | null = null;
+    private pfpPath: string;
     private currentGame: GameRoom | null = null;
     constructor(uuid: string){
         this.uid = uuid;
+        const nameAndPfp = generateUsernameAndPfp();
+        this.name = nameAndPfp.name;
+        this.pfpPath = nameAndPfp.pfpPath;
     }
 
     public serialize = (): user_serial => {
@@ -27,10 +32,12 @@ export class User{
             uid: this.uid, 
             name: this.name,
             gameId: String(this.currentGame?.getId()),
+            pfpPath: this.pfpPath,
         }
     }
     public getUid = () => { return this.uid; }
     public setupSoket = (sok: WebSocket) => {
+        console.log('setting up sok');
         this.sok = sok;
         this.sendSokMsg({
             req: 'init',
@@ -38,19 +45,20 @@ export class User{
                 self: this.serialize(),
                 game: this.currentGame?.serialize(),
             }
-        })
+        });
+        this.sok.onmessage = this.onSokMsg;
     }
     public setCurrentGame = (game: GameRoom) => {
         this.currentGame = game;
     }
 
     public onSokMsg = (e: WebSocket.MessageEvent) => {
-        if(!this.sok) this.setupSoket(e.target);
         const req = JSON.parse(e.data.toString());
         console.log(req);
     }
 
     public sendSokMsg = (msg: sokMsg) => {
+        console.log(msg);
         this.sok?.send(JSON.stringify(msg));
     }
 }
